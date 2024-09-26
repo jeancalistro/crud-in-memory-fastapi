@@ -32,6 +32,9 @@ class DB_SYSTEM():
         entity.id = self.get_count() + 1
         self.entity_table.append(entity)
         self.increment_count()
+
+    def remove_data(self, entity : Entity):
+        self.entity_table.remove(entity)
     
     def get_count(self):
         return self.count

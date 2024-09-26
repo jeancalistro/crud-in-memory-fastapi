@@ -33,23 +33,20 @@ async def update(id : int, request : Request):
     body = await request.body()
     body_json = json.loads(body)
 
-    alunos = bd.get_entities()
-    for aluno in alunos:
-        if(aluno.id == id):
-            if(body_json['email']):
-                aluno.email = body_json['email']
-            if(body_json['name']):
-                aluno.name = body_json['name']
-            return aluno
+    aluno = bd.get_entity_by_id(id)
+    if(aluno):
+        if(body_json['email']):
+            aluno.email = body_json['email']
+        if(body_json['name']):
+            aluno.name = body_json['name']
+        return aluno
     raise HTTPException(status_code=404, detail="Aluno não Encontrado!")
 
 @app.delete("/aluno/delete/{id}", status_code = 204)
 def delete(id : int):
-    alunos = bd.get_entities()
-    for aluno in alunos:
-        if(aluno.id == id):
-            alunos.remove(aluno)
-            return {"message" : "removido"}
+    aluno = bd.get_entity_by_id(id)
+    if(aluno):
+        bd.remove_data(aluno)
     raise HTTPException(status_code=404, detail="Aluno não Encontrado!")
 
 
