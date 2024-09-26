@@ -21,9 +21,11 @@ def get_by_id(id : int):
 async def create(request : Request):
     body = await request.body()
     body_json = json.loads(body)
-
-    if(body_json['name'] and body_json['email']):
-        aluno = Aluno(body_json['name'], body_json['email'])
+    name : str = body_json['name']
+    email : str = body_json['email']
+    # adicionar verificação de existência
+    if(name and email):
+        aluno = Aluno(name, email)
         bd.new_data(aluno)
         return aluno
     raise HTTPException(status_code=409, detail="Aluno já Existe!")
@@ -34,6 +36,7 @@ async def update(id : int, request : Request):
     body_json = json.loads(body)
 
     aluno = bd.get_entity_by_id(id)
+
     if(aluno):
         if(body_json['email']):
             aluno.email = body_json['email']
@@ -47,6 +50,7 @@ def delete(id : int):
     aluno = bd.get_entity_by_id(id)
     if(aluno):
         bd.remove_data(aluno)
+        return
     raise HTTPException(status_code=404, detail="Aluno não Encontrado!")
 
 
